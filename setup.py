@@ -8,7 +8,7 @@ setup(
     author='bit0rez',
     author_email='b1t0r3z@gmail.com',
     description='Copy of mschap library for python. Library copied from IBS project (http://sourceforge.net/projects/ibs/).',
-    long_description=open('README.txt').read(),
+    long_description=open('README.md').read(),
     url='https://github.com/xjaner/mschap-python',
     packages=['mschap'],
     license='GNU General Public License',
