@@ -1,4 +1,4 @@
-from core.lib.mschap import mschap
+from mschap import mschap
 import sha,md5
 import random
 
@@ -39,7 +39,7 @@ Magic3 = \
     "\x65\x20\x73\x65\x72\x76\x65\x72\x20\x73"+\
     "\x69\x64\x65\x2c\x20\x69\x74\x20\x69\x73"+\
     "\x20\x74\x68\x65\x20\x73\x65\x6e\x64\x20"+\
-    "\x6b\x65\x79\x2e"    
+    "\x6b\x65\x79\x2e"
 
 def mppe_chap2_gen_keys(password,nt_response):
     """
@@ -196,7 +196,7 @@ def create_salts():
     send_salt=create_salt()
     recv_salt=create_salt()
     while send_salt==recv_salt: recv_salt=create_salt()
-    return (send_salt,recv_salt)    
+    return (send_salt,recv_salt)
 
 def create_salt():
     return chr(128+random.randrange(0,128))+chr(random.randrange(0,256))
@@ -238,7 +238,7 @@ def radius_encrypt_keys(plain_text,secret,request_authenticator,salt):
 	result+=c
 
     return result
-    
+
 def xor(str1,str2):
     return ''.join(map(lambda s1,s2:chr(ord(s1)^ord(s2)),str1,str2))
-    
+
