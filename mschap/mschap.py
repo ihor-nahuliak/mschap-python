@@ -13,7 +13,7 @@ def generate_nt_response_mschap(challenge,password):
    {
       NtPasswordHash( Password, giving PasswordHash )
       ChallengeResponse( Challenge, PasswordHash, giving Response )
-   }    
+   }
     """
     password_hash=nt_password_hash(password)
     return challenge_response(challenge,password_hash)
@@ -39,7 +39,7 @@ def generate_nt_response_mschap2(authenticator_challenge,peer_challenge,username
       NtPasswordHash( Password, giving PasswordHash )
       ChallengeResponse( Challenge, PasswordHash, giving Response )
    }
-    
+
     """
     challenge=challenge_hash(peer_challenge,authenticator_challenge,username)
     password_hash=nt_password_hash(password)
@@ -77,14 +77,14 @@ def challenge_hash(peer_challenge,authenticator_challenge,username):
       memcpy(Challenge, Digest, 8)
    }
 
-    
+
     """
     sha_hash=sha.new()
     sha_hash.update(peer_challenge)
     sha_hash.update(authenticator_challenge)
     sha_hash.update(username)
     return sha_hash.digest()[:8]
-    
+
 def nt_password_hash(passwd,pad_to_21_bytes=True):
     """
    NtPasswordHash(
@@ -139,14 +139,14 @@ def challenge_response(challenge,password_hash):
     zpassword_hash=password_hash
 #    while len(zpassword_hash)<21:
 #	zpassword_hash+="\0"
-    
+
     response=""
     des_obj=des.DES(zpassword_hash[0:7])
     response+=des_obj.encrypt(challenge)
 
     des_obj=des.DES(zpassword_hash[7:14])
     response+=des_obj.encrypt(challenge)
-    
+
     des_obj=des.DES(zpassword_hash[14:21])
     response+=des_obj.encrypt(challenge)
     return response
@@ -231,7 +231,7 @@ def generate_authenticator_response(password,nt_response,peer_challenge,authenti
     sha_hash.update(nt_response)
     sha_hash.update(Magic1)
     digest=sha_hash.digest()
-    
+
     challenge=challenge_hash(peer_challenge,authenticator_challenge,username)
 
     sha_hash=sha.new()
@@ -239,9 +239,9 @@ def generate_authenticator_response(password,nt_response,peer_challenge,authenti
     sha_hash.update(challenge)
     sha_hash.update(Magic2)
     digest=sha_hash.digest()
-    
-    return "S="+convert_to_hex_string(digest)
-    
+
+    return digest
+
 def convert_to_hex_string(string):
     hex_str=""
     for c in string:
@@ -250,7 +250,7 @@ def convert_to_hex_string(string):
 	    hex_tmp="0"+hex_tmp
 	hex_str+=hex_tmp
     return hex_str.upper()
-    
+
 def hash_nt_password_hash(password_hash):
     """
    HashNtPasswordHash(
@@ -267,7 +267,7 @@ def hash_nt_password_hash(password_hash):
     md4_context.update(password_hash)
 
     res = md4_context.digest()
-    return res    
+    return res
 
 def lm_password_hash(password):
     """
