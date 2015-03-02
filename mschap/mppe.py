@@ -1,5 +1,6 @@
 import mschap
-import sha,md5
+import sha
+from hashlib import md5
 import random
 
 SHSpad1 = \
