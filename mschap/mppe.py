@@ -1,5 +1,5 @@
 import mschap
-import sha
+import hashlib
 from hashlib import md5
 import random
 
@@ -119,7 +119,7 @@ def get_master_key(password_hash_hash,nt_response):
    }
 
     """
-    sha_hash=sha.new()
+    sha_hash=hashlib.sha1()
     sha_hash.update(password_hash_hash)
     sha_hash.update(nt_response)
     sha_hash.update(Magic1)
@@ -181,7 +181,7 @@ VOID
 	    s=Magic2
 	else:
 	    s=Magic3
-    sha_hash=sha.new()
+    sha_hash=hashlib.sha1()
     sha_hash.update(master_key)
     sha_hash.update(SHSpad1)
     sha_hash.update(s)
