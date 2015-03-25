@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='mschap',
-    version='1.0.2',
+    version='1.0.3',
     author='bit0rez',
     author_email='b1t0r3z@gmail.com',
     description='Copy of mschap library for python. Library copied from IBS project (http://sourceforge.net/projects/ibs/).',

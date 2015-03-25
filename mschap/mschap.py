@@ -1,6 +1,6 @@
 import des
 import md4
-import sha
+import hashlib
 import utils
 
 
@@ -79,7 +79,7 @@ def challenge_hash(peer_challenge,authenticator_challenge,username):
 
 
     """
-    sha_hash=sha.new()
+    sha_hash=hashlib.sha1()
     sha_hash.update(peer_challenge)
     sha_hash.update(authenticator_challenge)
     sha_hash.update(username)
@@ -226,7 +226,7 @@ def generate_authenticator_response(password,nt_response,peer_challenge,authenti
     password_hash=nt_password_hash(password,False)
     password_hash_hash=hash_nt_password_hash(password_hash)
 
-    sha_hash=sha.new()
+    sha_hash=hashlib.sha1()
     sha_hash.update(password_hash_hash)
     sha_hash.update(nt_response)
     sha_hash.update(Magic1)
@@ -234,7 +234,7 @@ def generate_authenticator_response(password,nt_response,peer_challenge,authenti
 
     challenge=challenge_hash(peer_challenge,authenticator_challenge,username)
 
-    sha_hash=sha.new()
+    sha_hash=hashlib.sha1()
     sha_hash.update(digest)
     sha_hash.update(challenge)
     sha_hash.update(Magic2)
