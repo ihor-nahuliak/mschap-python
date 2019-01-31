@@ -4,7 +4,7 @@ import hashlib
 import utils
 
 
-def generate_nt_response_mschap(challenge,password):
+def generate_nt_response_mschap(challenge, password):
     """
    NtChallengeResponse(
    IN  8-octet               Challenge,
@@ -15,11 +15,11 @@ def generate_nt_response_mschap(challenge,password):
       ChallengeResponse( Challenge, PasswordHash, giving Response )
    }
     """
-    password_hash=nt_password_hash(password)
-    return challenge_response(challenge,password_hash)
+    password_hash = nt_password_hash(password)
+    return challenge_response(challenge, password_hash)
 
 
-def generate_nt_response_mschap2(authenticator_challenge,peer_challenge,username,password):
+def generate_nt_response_mschap2(authenticator_challenge, peer_challenge, username, password):
     """
    GenerateNTResponse(
    IN  16-octet              AuthenticatorChallenge,
@@ -41,12 +41,12 @@ def generate_nt_response_mschap2(authenticator_challenge,peer_challenge,username
    }
 
     """
-    challenge=challenge_hash(peer_challenge,authenticator_challenge,username)
-    password_hash=nt_password_hash(password)
-    return challenge_response(challenge,password_hash)
+    challenge = challenge_hash(peer_challenge, authenticator_challenge, username)
+    password_hash = nt_password_hash(password)
+    return challenge_response(challenge, password_hash)
 
 
-def challenge_hash(peer_challenge,authenticator_challenge,username):
+def challenge_hash(peer_challenge, authenticator_challenge, username):
     """
    ChallengeHash(
    IN 16-octet               PeerChallenge,
@@ -79,13 +79,14 @@ def challenge_hash(peer_challenge,authenticator_challenge,username):
 
 
     """
-    sha_hash=hashlib.sha1()
+    sha_hash = hashlib.sha1()
     sha_hash.update(peer_challenge)
     sha_hash.update(authenticator_challenge)
     sha_hash.update(username)
     return sha_hash.digest()[:8]
 
-def nt_password_hash(passwd,pad_to_21_bytes=True):
+
+def nt_password_hash(passwd, pad_to_21_bytes=True):
     """
    NtPasswordHash(
    IN  0-to-256-unicode-char Password,
@@ -109,12 +110,12 @@ def nt_password_hash(passwd,pad_to_21_bytes=True):
 
     if pad_to_21_bytes:
         # addig zeros to get 21 bytes string
-	res = res + '\000\000\000\000\000'
+        res = res + '\000\000\000\000\000'
 
     return res
 
 
-def challenge_response(challenge,password_hash):
+def challenge_response(challenge, password_hash):
     """
    ChallengeResponse(
    IN  8-octet  Challenge,
@@ -136,23 +137,27 @@ def challenge_response(challenge,password_hash):
                   giving 3rd 8-octets of Response )
    }
     """
-    zpassword_hash=password_hash
-#    while len(zpassword_hash)<21:
-#	zpassword_hash+="\0"
+    zpassword_hash = password_hash
+    # while len(zpassword_hash)<21:
+    #     zpassword_hash+="\0"
 
-    response=""
-    des_obj=des.DES(zpassword_hash[0:7])
-    response+=des_obj.encrypt(challenge)
+    response = ""
+    des_obj = des.DES(zpassword_hash[0:7])
+    response += des_obj.encrypt(challenge)
 
-    des_obj=des.DES(zpassword_hash[7:14])
-    response+=des_obj.encrypt(challenge)
+    des_obj = des.DES(zpassword_hash[7:14])
+    response += des_obj.encrypt(challenge)
 
-    des_obj=des.DES(zpassword_hash[14:21])
-    response+=des_obj.encrypt(challenge)
+    des_obj = des.DES(zpassword_hash[14:21])
+    response += des_obj.encrypt(challenge)
     return response
 
 
-def generate_authenticator_response(password,nt_response,peer_challenge,authenticator_challenge,username):
+def generate_authenticator_response(password,
+                                    nt_response,
+                                    peer_challenge,
+                                    authenticator_challenge,
+                                    username):
     """
    GenerateAuthenticatorResponse(
    IN  0-to-256-unicode-char Password,
@@ -220,36 +225,37 @@ def generate_authenticator_response(password,nt_response,peer_challenge,authenti
 
    }
     """
-    Magic1="\x4D\x61\x67\x69\x63\x20\x73\x65\x72\x76\x65\x72\x20\x74\x6F\x20\x63\x6C\x69\x65\x6E\x74\x20\x73\x69\x67\x6E\x69\x6E\x67\x20\x63\x6F\x6E\x73\x74\x61\x6E\x74"
-    Magic2="\x50\x61\x64\x20\x74\x6F\x20\x6D\x61\x6B\x65\x20\x69\x74\x20\x64\x6F\x20\x6D\x6F\x72\x65\x20\x74\x68\x61\x6E\x20\x6F\x6E\x65\x20\x69\x74\x65\x72\x61\x74\x69\x6F\x6E"
+    Magic1 = "\x4D\x61\x67\x69\x63\x20\x73\x65\x72\x76\x65\x72\x20\x74\x6F\x20\x63\x6C\x69\x65\x6E\x74\x20\x73\x69\x67\x6E\x69\x6E\x67\x20\x63\x6F\x6E\x73\x74\x61\x6E\x74"  # noqa
+    Magic2 = "\x50\x61\x64\x20\x74\x6F\x20\x6D\x61\x6B\x65\x20\x69\x74\x20\x64\x6F\x20\x6D\x6F\x72\x65\x20\x74\x68\x61\x6E\x20\x6F\x6E\x65\x20\x69\x74\x65\x72\x61\x74\x69\x6F\x6E"  # noqa
 
-    password_hash=nt_password_hash(password,False)
-    password_hash_hash=hash_nt_password_hash(password_hash)
+    password_hash = nt_password_hash(password, False)
+    password_hash_hash = hash_nt_password_hash(password_hash)
 
-    sha_hash=hashlib.sha1()
+    sha_hash = hashlib.sha1()
     sha_hash.update(password_hash_hash)
     sha_hash.update(nt_response)
     sha_hash.update(Magic1)
-    digest=sha_hash.digest()
+    digest = sha_hash.digest()
 
-    challenge=challenge_hash(peer_challenge,authenticator_challenge,username)
+    challenge = challenge_hash(peer_challenge, authenticator_challenge, username)
 
-    sha_hash=hashlib.sha1()
+    sha_hash = hashlib.sha1()
     sha_hash.update(digest)
     sha_hash.update(challenge)
     sha_hash.update(Magic2)
-    digest=sha_hash.digest()
-
+    digest = sha_hash.digest()
     return digest
 
+
 def convert_to_hex_string(string):
-    hex_str=""
+    hex_str = ""
     for c in string:
-	hex_tmp=hex(ord(c))[2:]
-	if len(hex_tmp)==1:
-	    hex_tmp="0"+hex_tmp
-	hex_str+=hex_tmp
+        hex_tmp = hex(ord(c))[2:]
+        if len(hex_tmp) == 1:
+            hex_tmp = "0"+hex_tmp
+        hex_str += hex_tmp
     return hex_str.upper()
+
 
 def hash_nt_password_hash(password_hash):
     """
@@ -269,6 +275,7 @@ def hash_nt_password_hash(password_hash):
     res = md4_context.digest()
     return res
 
+
 def lm_password_hash(password):
     """
    LmPasswordHash(
@@ -286,12 +293,13 @@ def lm_password_hash(password):
    }
 
     """
-    ucase_password=password.upper()[:14]
-    while len(ucase_password)<14:
-	ucase_password+="\0"
-    password_hash=des_hash(ucase_password[:7])
-    password_hash+=des_hash(ucase_password[7:])
+    ucase_password = password.upper()[:14]
+    while len(ucase_password) < 14:
+        ucase_password += "\0"
+    password_hash = des_hash(ucase_password[:7])
+    password_hash += des_hash(ucase_password[7:])
     return password_hash
+
 
 def des_hash(clear):
     """
@@ -311,6 +319,5 @@ def des_hash(clear):
       DesEncrypt( StdText, Clear, giving Cypher )
    }
     """
-    des_obj=des.DES(clear)
+    des_obj = des.DES(clear)
     return des_obj.encrypt(r"KGS!@#$%")
-
