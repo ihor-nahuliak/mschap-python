@@ -1,7 +1,8 @@
-import des
-import md4
+from . import des
+from . import md4
+from . import utils
+
 import hashlib
-import utils
 
 
 def generate_nt_response_mschap(challenge, password):
