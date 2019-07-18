@@ -172,15 +172,15 @@ VOID
    }
     """
     if is_send:
-	if is_server:
-	    s=Magic3
-	else:
-	    s=Magic2
+        if is_server:
+            s=Magic3
+        else:
+            s=Magic2
     else:
-	if is_server:
-	    s=Magic2
-	else:
-	    s=Magic3
+        if is_server:
+            s=Magic2
+        else:
+            s=Magic3
     sha_hash=hashlib.sha1()
     sha_hash.update(master_key)
     sha_hash.update(SHSpad1)
@@ -234,9 +234,9 @@ def radius_encrypt_keys(plain_text,secret,request_authenticator,salt):
     c=xor(plain_text[:16],b)
     result=c
     for x in range(1,i):
-	b=md5.new(secret+c).digest()
-	c=xor(plain_text[x*16:(x+1)*16],b)
-	result+=c
+        b=md5.new(secret+c).digest()
+        c=xor(plain_text[x*16:(x+1)*16],b)
+        result+=c
 
     return result
 
